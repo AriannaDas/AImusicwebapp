@@ -19,10 +19,6 @@ function setup() {
     poseNet.on("pose", gotPoses);
 }
 
-function draw() {
-    image(video, 0, 0, 600, 550);
-}
-
 function modelLoaded() {
     console.log("PoseNet Is Initialized");
 }
@@ -30,11 +26,32 @@ function modelLoaded() {
 function gotPoses(results) {
     if(results.length > 0) {
         console.log(results);
+        scoreLeftWrist = results[0].pose.keypoints[9].score;
+        console.log("scoreLeftWrist = " + scoreLeftWrist);
+
         leftWristX = results[0].pose.leftWrist.x;
         leftWristY = results[0].pose.leftWrist.y;
         console.log("leftWristX = " + leftWristX + " leftWristY = " + leftWristY);
         rightWristX = results[0].pose.rightWrist.x;
         rightWristY = results[0].pose.rightWrist.y;
         console.log("rightWristX = " + rightWristX + " rightWristY = " + rightWristY);
+    }
+}
+
+function draw() {
+    image(video, 0, 0, 600, 550);
+
+    music1.isPlaying();
+
+    fill("#FF000");
+    stroke("FF000");
+
+    if (scoreLeftWrist > 0.2) 
+    {
+        music2.stop();
+        circle(leftWristX, leftWristY, 20);
+        if (music1 == false) {
+            music1.play()
+        }
     }
 }
